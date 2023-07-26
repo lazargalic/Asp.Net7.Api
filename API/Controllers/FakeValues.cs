@@ -225,8 +225,8 @@ namespace API.Controllers
 
 
 
-            var regUserRoles = new List<int> { 9, 10, 11, 14, 16, 19, 22, 26, 27, 20, 21, 23, 24, 29, 28 , 31 };
-            var adminUserRoles = new List<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 ,30, 31}; 
+            var regUserRoles = new List<int> { 9, 10, 11, 14, 16, 19, 22, 26, 27, 20, 21, 23, 24, 29, 28 , 31, 32, 33, 34 };
+            var adminUserRoles = new List<int> { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29 ,30, 31, 32, 33, 34 }; 
             var usecaseRoles = new List<UseCaseRole>();
 
             foreach(var r in regUserRoles)
@@ -369,19 +369,19 @@ namespace API.Controllers
                 new Emotion
                 {
                     NameEmotion="Funny and lol",
-                    Price = 100,
+                    //Price = 100,
                     ImagePath="Pathh funny"
                 },
                 new Emotion
                 {
                     NameEmotion = "Love",
-                    Price = 200,
+                   // Price = 200,
                     ImagePath="Pathh love"
                 },
                 new Emotion
                 {
                     NameEmotion = "Scary",
-                    Price = 150,
+                   // Price = 150,
                     ImagePath="Pathh scary"
                 }
             };

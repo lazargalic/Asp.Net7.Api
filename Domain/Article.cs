@@ -22,6 +22,7 @@ namespace Domain
         public int CategoryDesignArticleId { get; set; }
         public int? NonRegisteredUserId { get; set; }
         public int TownshipId { get; set; }
+        public double? TotalPrice { get; set; }
 
         public virtual User? User { get; set; }
         public virtual Township Township { get; set; }

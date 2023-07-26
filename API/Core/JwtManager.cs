@@ -1,5 +1,6 @@
 ﻿using API.Core.ImagesDto;
 using API.Core.TokenStorage;
+using Application.Exceptions;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -45,6 +46,12 @@ namespace API.Core
                 throw new UnauthorizedAccessException();  //c# 
             }
 
+            if (!user.IsActive)
+            {
+                throw new AccountNotActivated();  //c# 
+            }
+
+
             var actor = new JwtUser
             {
                 Id = user.Id,
@@ -85,5 +92,60 @@ namespace API.Core
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
+
+        public string RefreshToken(string token)
+        {
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_key);
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
+                var jwtToken = (JwtSecurityToken)validatedToken;
+
+                // Dohvati vreme isteka tokena
+                var expirationDate = jwtToken.ValidTo;
+
+                // Postavi novi datum isteka tokena  
+                var newExpirationDate = DateTime.UtcNow.AddMinutes(_minutes);
+
+                // Ako je novi datum isteka tokena manji od originalnog, nemoj menjati token
+                if (newExpirationDate <= expirationDate)
+                {
+                    return token;
+                }
+
+                // Generisi novi token s promenjenim datumom isteka
+                var newJwtToken = new JwtSecurityToken(
+                    issuer: jwtToken.Issuer,
+                   // audience: "Any",  da se ne ponavlja
+                    claims: principal.Claims,
+                    notBefore: jwtToken.ValidFrom,
+                    expires: newExpirationDate,
+                    signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                );
+
+                var newToken = new JwtSecurityTokenHandler().WriteToken(newJwtToken);
+
+                return newToken;
+            }
+            catch (SecurityTokenException)
+            {
+                // Ako token nije ispravan, možete ovde obraditi odgovarajuću grešku.
+                // Na primer, baciti gresku ili vratiti null.
+                return null;
+            }
+        }
+
     }
 }

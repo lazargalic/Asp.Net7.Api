@@ -3,6 +3,7 @@ using Application.Exceptions;
 using Application.UseCases.Commands;
 using Application.UseCases.Dto;
 using DataAccess;
+using Implementation.Payments.Calculator;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,12 @@ namespace Implementation.UseCases.Commands.Ef
 {
     public class EfUserAddCommentCommand : EfUseCase, IAddCommentRegisteredUserCommand
     {
-        IApplicationUser userr;
-        public EfUserAddCommentCommand(Asp2023DbContext context, IApplicationUser user) : base(context)
+        private IApplicationUser userr;
+        private CalculateTotalPrice Calculator { get; }
+        public EfUserAddCommentCommand(Asp2023DbContext context, IApplicationUser user, CalculateTotalPrice calculator) : base(context)
         {
             userr = user;
+            Calculator = calculator;
         }
 
         public int Id => 21;
@@ -109,8 +112,8 @@ namespace Implementation.UseCases.Commands.Ef
                 ArticleId=data.ArticleId,
                 CategoryDimensionId=data.CategoryDimensionId,
                 CategoryCommentId=data.CategoryCommentId,
-                StickerId=data.StickerId==0 ? null : data.StickerId
-
+                StickerId=data.StickerId==0 ? null : data.StickerId,
+                TotalPrice= Calculator.CalculateCommentTotalPrice(data)
             });
 
             Context.SaveChanges();

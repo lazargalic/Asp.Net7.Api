@@ -27,5 +27,13 @@ namespace Application.Exceptions
         {
         }
     }
-     
+
+    public class AccountNotActivated : Exception
+    {
+        public AccountNotActivated() :
+            base("Vaš nalog nije aktiviran. Proverite email za aktivaciju ili kontaktirajte administratore!")
+        {
+        }
+    }
+
 }

@@ -10,7 +10,7 @@ namespace Domain
     {
         public string NameEmotion { get; set; }
         public string ImagePath { get; set; }
-        public float Price { get; set; }
+       // public float Price { get; set; }
         public bool IsActive { get; set; }
 
         public virtual ICollection<ArticleUserEmotion> ArticleUserEmotions { get; set; } = new List<ArticleUserEmotion>();

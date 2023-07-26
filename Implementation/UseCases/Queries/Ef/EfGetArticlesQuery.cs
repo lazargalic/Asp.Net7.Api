@@ -34,9 +34,9 @@ namespace Implementation.UseCases.Queries.Ef
         {
 
             var query = Context.Articles
-                            .Include(x => x.CommentArticles)
-                            .ThenInclude(y => y.ChildComments)
-                              .ThenInclude(u => u.Sticker)
+                            //.Include(x => x.CommentArticles)
+                           // .ThenInclude(y => y.ChildComments)
+                             // .ThenInclude(u => u.Sticker)
                              .Include(x => x.ArticleUserEmotions)
                                 .ThenInclude(x => x.Emotion)
                              .Include(x => x.User)
@@ -44,7 +44,7 @@ namespace Implementation.UseCases.Queries.Ef
                                 .ThenInclude(x => x.Country)
                              .AsQueryable();
 
-            if (User.RoleId == 1 || User.RoleId== 0)
+            if (User.RoleId != 2)
             {
                 query = query.Where(x => x.DeletedAt == null);
             }
@@ -88,7 +88,7 @@ namespace Implementation.UseCases.Queries.Ef
 
             if (search.PerPage == null || search.PerPage < 1)
             {
-                search.PerPage = 5;
+                search.PerPage = 12;
             }
 
             if (search.Page == null || search.Page < 1)
@@ -159,6 +159,7 @@ namespace Implementation.UseCases.Queries.Ef
                         Date = y.CreatedAt,
                     })
                 }),*/
+                TotalPrice = x.TotalPrice,
                 CreatedAt = x.CreatedAt,
                 DeletedAt = x.DeletedAt,
                 LastUpdatedAt = x.LastUpdatedAt 

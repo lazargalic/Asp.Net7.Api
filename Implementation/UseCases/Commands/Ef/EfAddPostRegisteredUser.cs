@@ -5,6 +5,7 @@ using Application.UseCases.Dto;
 using DataAccess;
 using Domain;
 using FluentValidation;
+using Implementation.Payments.Calculator;
 using Implementation.Validators;
 using System;
 using System.Collections.Generic;
@@ -19,14 +20,16 @@ namespace Implementation.UseCases.Commands.Ef
 
         private IApplicationUser ulogovaniUser_;
         private AddPostValidator ValidatorPost { get; }
-
+        private CalculateTotalPrice Calculator { get; }
         public EfAddPostRegisteredUser(
                     Asp2023DbContext context,
                     IApplicationUser ulogovaniUser,
-                    AddPostValidator validator1) : base(context)
+                    AddPostValidator validator1,
+                    CalculateTotalPrice calculator) : base(context)
         {
-            ulogovaniUser_= ulogovaniUser;
+            ulogovaniUser_ = ulogovaniUser;
             ValidatorPost = validator1;
+            Calculator = calculator;
         }
 
         public int Id => 20;
@@ -62,7 +65,8 @@ namespace Implementation.UseCases.Commands.Ef
                 UserId = objUser.Id,   //  ! 
                 NonRegisteredUserId = null,
                 CategoryDesignArticleId = articleToAddRequest.CategoryDesignArticleId,
-                CategoryDimensionId = articleToAddRequest.CategoryDimensionId
+                CategoryDimensionId = articleToAddRequest.CategoryDimensionId,
+                TotalPrice = Calculator.CalculateArticleTotalPrice(articleToAddRequest)
             };
 
             //Context.Articles.Add(addArticle);

@@ -19,11 +19,12 @@ namespace DataAccess.Configurations
             builder.Property(x => x.Password).HasMaxLength(120).IsRequired();
             builder.Property(x => x.PhoneNumber).HasMaxLength(20);
             builder.Property(x => x.IdentityNumber).HasMaxLength(40);
-            builder.Property(x => x.IsActive).HasDefaultValue(true);
+            //builder.Property(x => x.IsActive).HasDefaultValue(true);
 
             builder.HasIndex(x => x.Email).IsUnique();
             builder.HasIndex(x => x.FirstName);
             builder.HasIndex(x => x.LastName);
+            builder.Property(x => x.VerificationCode).HasMaxLength(340);
 
             builder.HasMany(x => x.Articles).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(x => x.CommentArticles).WithOne(x => x.User).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);

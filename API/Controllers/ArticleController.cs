@@ -271,6 +271,63 @@ namespace API.Controllers
 
 
 
+
+        /// <summary>
+        /// Editovanje Objave-  svaki korisnik samo svoje moze
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        /// <remarks>
+        ///  (+token):
+        ///      
+        ///     
+        ///
+        /// </remarks>
+        /// <response code="204">Uspesan edit </response>
+        /// <response code="422">Unprocessable Entity </response>
+        /// <response code="404">NotFound -(svakako dohvatam objekat usera iz Tokena(IApplicationUser) al sam i to proverio , mzd je suvisno) </response>
+        /// <response code="500">Unexpected server error.</response>
+        /// 
+        [HttpPatch]
+        [Authorize]
+        [Route("/api/user/articleEdit")]
+        public IActionResult HttpPatch([FromForm] EditArticleWithImage dto,
+                        [FromServices] IEditOneMyPostCommand command)
+        {
+            if (dto.MainPicture != null)
+            {
+                var guid = Guid.NewGuid().ToString();
+
+                var extension = Path.GetExtension(dto.MainPicture.FileName);
+
+                if (!AllowedExtensions.Contains(extension))
+                {
+                    throw new InvalidOperationException("Nije dozvoljen tip slike. Dozvoljeni: 'jpg', 'png', 'jpeg' ");
+                }
+
+                var fileName = guid + extension;
+                //var filePath = Path.Combine("wwwroot", "Images", fileName);
+                var filePath = Path.Combine("wwwroot", "Images", fileName);
+                using var stream = new FileStream(filePath, FileMode.Create);
+                dto.MainPicture.CopyTo(stream);
+
+                string databasePath = filePath.Replace("wwwroot\\", string.Empty);
+                dto.MainPicturePath = databasePath;
+
+            }
+            //za dodatne slike edit kad krene da se koristi 
+
+
+            Handler.HandleCommand(command, dto);
+            return StatusCode(204);
+        }
+
+
+
+
+
+
         /// <summary>
         /// Brisanje Objave: Admin- svaku , RegUser- samo svoje .
         /// </summary>

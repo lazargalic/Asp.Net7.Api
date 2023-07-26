@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Application.UseCases.PaginationDto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,6 +46,11 @@ namespace Application.UseCases.Dto
         public IEnumerable<AddMoreImagesToArticles>? MoreImages { get; set; } = new List<AddMoreImagesToArticles>();
     }
 
+    public class EdititingArticle : CreatingArticle
+    {
+        public int Id { get; set; }
+    }
+
     public class AddMoreImagesToArticles
     {
         public string ImagePath { get; set; }
@@ -54,4 +60,12 @@ namespace Application.UseCases.Dto
     {
         public int IdArticle { get; set; }
     }
+
+    public class SearchKeywordDto : BasePaginationSearch
+    {
+        public string? NameArticle { get; set; }
+    }
+
+
+
 }

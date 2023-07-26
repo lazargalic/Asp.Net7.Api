@@ -16,8 +16,12 @@ namespace API.Core.ImagesDto
             public IEnumerable<IFormFile>? MoreImages { get; set; } = new List<IFormFile>();
         }
 
+        public class EditArticleWithImage : EdititingArticle
+        {
+            public IFormFile? MainPicture { get; set; }
+            //public IEnumerable<IFormFile>? MoreImages { get; set; } = new List<IFormFile>();
+        }
 
 
-        
     }
 }

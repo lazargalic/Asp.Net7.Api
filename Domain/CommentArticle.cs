@@ -17,6 +17,7 @@ namespace Domain
         public int? StickerId { get; set; }
         public int CategoryDimensionId { get; set; }
         //public int? CommentArticleStickerId { get; set; }
+        public double? TotalPrice { get; set; }
 
         public virtual User User { get; set; }
         public virtual Article Article { get; set; }

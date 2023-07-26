@@ -40,7 +40,7 @@ namespace Implementation.UseCases.Commands.Ef.AdminEfCommands
             {
                 NameEmotion = data.NameEmotion,
                 ImagePath = data.ImagePath,
-                Price = data.Price
+                //Price = data.Price
             });
 
             Context.SaveChanges();

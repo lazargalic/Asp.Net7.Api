@@ -16,7 +16,7 @@ namespace API.Core
         public string Identity => "Anonymous";
         public int Id => 0;
         public int RoleId => 0;
-        public IEnumerable<int> UseCaseIds => new List<int> { 1, 9, 10, 11, 14, 16, 19, 22, 26, 31}; //Dodati ulogu neulogovani korisnik i use casove
+        public IEnumerable<int> UseCaseIds => new List<int> { 1, 9, 10, 11, 14, 16, 19, 22, 26, 31, 34}; //Dodati ulogu neulogovani korisnik i use casove
         public string Email => "anonymous@gmail.com";
     }
 }

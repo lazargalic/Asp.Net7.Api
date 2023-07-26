@@ -24,7 +24,31 @@ namespace API.Controllers
 
 
         /// <summary>
-        /// Prilikom ucitavanja proverava se da li je neki korisnik ragovao ili ne, (i ako je neulogovan dobija se 0 za id reakcije)
+        /// Prilikom ucitavanja jedne stranice proverava se da li je neki korisnik ragovao ili ne 
+        /// </summary>
+        /// <returns></returns>
+        /// <remarks>
+        ///      
+        ///     
+        ///
+        /// </remarks>
+        /// <response code="200">Insert</response>
+        /// <response code="404">NotFound</response>
+        /// <response code="500">Unexpected server error.</response>
+        [HttpGet]
+        [Route("/api/user/emotionPost/{id}")]
+        public IActionResult Get(
+            [FromServices] IGetReactionToCurrentPost query,
+            [FromRoute] int id)
+        { 
+            return StatusCode(200, Handler.HandleQuery(query, id) );
+        }
+
+
+
+
+        /// <summary>
+        ///  Dohvatanje svih objava trenutno ulogovanog korisnika
         /// </summary>
         /// <returns></returns>
         /// <remarks>
@@ -38,13 +62,14 @@ namespace API.Controllers
         /// <response code="409">AlreadyReactedException</response>
         /// <response code="500">Unexpected server error.</response>
         [HttpGet]
-        [Route("/api/user/emotionPost/{id}")]
+        [Route("/api/user/myPosts")]
         public IActionResult Get(
-            [FromServices] IGetReactionToCurrentPost query,
-            [FromRoute] int id)
-        { 
-            return StatusCode(200, Handler.HandleQuery(query, id) );
+            [FromServices] IGetPostsFromOneRegUserQuery query,
+            [FromQuery] SearchKeywordDto search)
+        {
+            return StatusCode(200, Handler.HandleQuery(query, search));
         }
+        //        public TResponse HandleQuery<TRequest, TResponse>(IQuery<TRequest, TResponse> query, TRequest data)
 
 
 
@@ -136,6 +161,40 @@ namespace API.Controllers
         }
 
 
+
+
+
+
+
+
+        /// <summary>
+        /// Aktivacija naloga, preko emaila     
+        /// </summary>
+        /// 
+        /// <param name="dto"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        /// <remarks>
+        ///
+        ///      
+        ///     
+        ///
+        /// </remarks>
+        /// <response code="204">No Content</response>
+        /// <response code="401">Unauthorized</response>
+        /// <response code="404">NotFound</response>
+        /// <response code="409">EmailExistsInDatabaseException</response>
+        /// <response code="500">Unexpected server error.</response>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("/api/user/validateEmail/{guid}")]
+        public IActionResult Put(
+        [FromRoute] string guid,
+        [FromServices] IValidateAccountCommand command)
+        {
+            Handler.HandleCommand(command, guid);
+            return NoContent();
+        }
 
 
 

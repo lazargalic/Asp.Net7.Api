@@ -56,6 +56,16 @@ namespace API.Core
                     };
                 }
 
+                if (ex is AccountNotActivated accountNotActivated)
+                {
+                    statusCode = StatusCodes.Status409Conflict;
+                    response = new
+                    {
+                        message = accountNotActivated.Message   //
+                    };
+                }
+                 
+
 
                 if (ex is ForbiddenExecutionException entityForbiddenExecutionException)
                 {

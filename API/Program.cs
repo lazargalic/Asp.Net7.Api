@@ -30,6 +30,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Application.Exceptions;
+using Implementation.Payments.Calculator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -149,6 +150,11 @@ builder.Services.AddTransient<IDeleteCommentCommand, EfDeleteCommentCommand>();
 builder.Services.AddTransient<ITokenStorage, InMemoryTokenStorage>();
 builder.Services.AddTransient<LoginValidator>();
 builder.Services.AddTransient<IGetReactionToCurrentPost, EfGetReactionToCurrentPost>();
+builder.Services.AddTransient<IGetPostsFromOneRegUserQuery, EfGetPostsFromOneRegUserQuery>();
+builder.Services.AddTransient<IEditOneMyPostCommand, EfEditOneMyPostCommand>();
+builder.Services.AddTransient<IValidateAccountCommand, EfValidateAccountCommand>();
+builder.Services.AddTransient<CalculateTotalPrice>();
+builder.Services.AddTransient<EditPostValidator>();
  
 ///////////////////////////////My Dependency Operation End
 

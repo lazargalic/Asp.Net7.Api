@@ -53,7 +53,7 @@ namespace Implementation.UseCases
 
 
             bool isAuthorized = _user.Id == 0 ? false : true;
-            _auditLogger.Log(new Application.Logging.AuditLogDto
+/*            _auditLogger.Log(new Application.Logging.AuditLogDto
             {
                 UseCaseName = query.Name,
                 UserIdentity = _user.Identity,
@@ -61,7 +61,7 @@ namespace Implementation.UseCases
                 UserId = isAuthorized ? _user.Id : null,
                 CreatedTime = DateTime.Now,
                 Data = JsonSerializer.Serialize(data)
-            });
+            });*/
 
             return response;
 

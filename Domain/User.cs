@@ -17,7 +17,9 @@ namespace Domain
         public string? PhoneNumber { get; set; }
         public int RoleId { get; set; }
         public bool IsActive { get; set; }
-         
+        public string? VerificationCode { get; set; }
+
+
         public virtual Role Role { get; set; }
         public virtual ICollection<UserCompany> UserCompanys { get; set; } = new List<UserCompany>();
         public virtual ICollection<ArticleUserEmotion> ArticleUserEmotions { get; set; } = new List<ArticleUserEmotion>();

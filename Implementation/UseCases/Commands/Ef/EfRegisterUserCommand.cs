@@ -37,7 +37,7 @@ namespace Implementation.UseCases.Commands.Ef
         public void Execute(RegisterUserDto dto)
         {
 
-            Validator.ValidateAndThrow(dto);   //Okida se middleware posle 
+             Validator.ValidateAndThrow(dto);   //Okida se middleware posle 
 
             var identityNumberToInsert = dto.IdentityNumber == null ? null : dto.IdentityNumber;
             var phoneNumberToInsert = dto.PhoneNumber == null ? null : dto.PhoneNumber;
@@ -45,6 +45,7 @@ namespace Implementation.UseCases.Commands.Ef
             int roleIdToInsert = Context.Roles.Where(x => x.NameRole == "Korisnik").First().Id;
 
             var hash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+            var guid = Guid.NewGuid().ToString();
 
             var userToAdd = new Domain.User
             {
@@ -54,8 +55,11 @@ namespace Implementation.UseCases.Commands.Ef
                 Password = hash,
                 IdentityNumber = identityNumberToInsert,
                 PhoneNumber = phoneNumberToInsert,
-                RoleId = roleIdToInsert
+                RoleId = roleIdToInsert,
+                VerificationCode = guid,
+                IsActive = false
             };
+        
 
             //Context.Users.Add( userToAdd );
             //Context.SaveChanges();
@@ -81,53 +85,57 @@ namespace Implementation.UseCases.Commands.Ef
             userToAdd.AllUserUseCases = useCasesToAdd;
 
             Context.Users.Add(userToAdd);
+            Context.SaveChanges();
 
+            string sucessfullVerifyPage = "http://localhost:4200/successful-register/";
 
             _sender.Send(new MailMessageDto
             {
                 To = userToAdd.Email,
-                Title = "You Registered .",
-                Body = "< html > " +
-                       "<head>" +
-                       "<style>" +
-                       "body { font-family: Arial, sans-serif; }" +
-                       ".container { max-width: 600px; margin: 0 auto; padding: 20px; }" +
-                       "h1 { color: #333; text-align: center; }" +
-                       "p { margin-bottom: 20px; }" +
-                       "table { width: 100%; border-collapse: collapse; }" +
-                       "th, td { padding: 10px; border: 1px solid #ccc; }" +
-                       "</style>" +
-                       "</head>" +
+                Title = "Verifikujte vaš nalog",
+                Body = "<html> " +
+                           "<head>" +
+                           "<style>" +
+                               "body { font-family: Arial, sans-serif; }" +
+                               ".container { max-width: 600px; margin: 0 auto; padding: 20px; }" +
+                               "h1 { color: #333; text-align: center; }" +
+                               "p { margin-bottom: 20px; }" +
+                               "table { width: 100%; border-collapse: collapse; }" +
+                               "th, td { padding: 10px; border: 1px solid #ccc; }" +
+                               ".verify-button {\r\n      width: 100%;\r\n      background-color: #007BFF;\r\n      color: white;\r\n      padding: 15px;\r\n      text-align: center;\r\n      font-size: 18px;\r\n      font-weight: bold;\r\n      border: none;\r\n      border-radius: 25px;\r\n      cursor: pointer;\r\n      transition: background-color 0.3s ease-in-out;\r\n    }\r\n    .verify-button:hover {\r\n      background-color: #0056b3;\r\n    }" +
+                           "</style>" +
+                           "</head>" +
                        "<body>" +
-                       "<div class=\"container\">" +
-                       "<h1>Dobrodošli!</h1>" +
-                       "<p>Hvala vam što ste se registrovali. Evo informacija o vašoj registraciji:</p>" +
-                       "<table>" +
-                       "<tr>" +
-                       "<th>Ime</th>" +
-                       "<td>" + userToAdd.FirstName + "</td>" +
-                       "</tr>" +
-                       "<tr>" +
-                       "<th>Prezime</th>" +
-                       "<td>" + userToAdd.LastName + "</td>" +
-                       "</tr>" +
-                       "<tr>" +
-                       "<th>Email</th>" +
-                       "<td>" + userToAdd.Email + "</td>" +
-                       "</tr>" +
-                       "<tr>" +
-                       "<th>Registrovan</th>" +
-                       "<td>" + userToAdd.CreatedAt + "</td>" +
-                       "</tr>" +
-                       "</table>" +
-                       "</div>" +
+                           "<div class=\"container\">" +
+                               "<h1>Dobrodošli!</h1>" +
+                               "<p>Evo informacija o vašoj registraciji:</p>" +
+                               "<table>" +
+                               "<tr>" +
+                               "<th>Ime</th>" +
+                               "<td>" + userToAdd.FirstName + "</td>" +
+                               "</tr>" +
+                               "<tr>" +
+                               "<th>Prezime</th>" +
+                               "<td>" + userToAdd.LastName + "</td>" +
+                               "</tr>" +
+                               "<tr>" +
+                               "<th>Email</th>" +
+                               "<td>" + userToAdd.Email + "</td>" +
+                               "</tr>" +
+                               "<tr>" +
+                               "<th>Registrovan</th>" +
+                               "<td>" + userToAdd.CreatedAt + "</td>" +
+                               "</tr>" +
+                               "</table>" +
+                           "</div>" +
+                           "  <div class=\"container\">\r\n  <a href=\" " + sucessfullVerifyPage + guid +  "\">   <button class=\"verify-button\">VERIFIKUJTE VAŠ NALOG OVDE</button>\r\n </a> </div>" +
                        "</body>" +
                        "</html>"
             });
 
 
 
-            Context.SaveChanges();
+           
 
 
         }

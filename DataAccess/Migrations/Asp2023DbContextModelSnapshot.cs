@@ -94,6 +94,9 @@ namespace DataAccess.Migrations
                         .HasMaxLength(385)
                         .HasColumnType("nvarchar(385)");
 
+                    b.Property<double?>("TotalPrice")
+                        .HasColumnType("float");
+
                     b.Property<int>("TownshipId")
                         .HasColumnType("int");
 
@@ -181,7 +184,7 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("CreatedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 1, 22, 4, 7, 597, DateTimeKind.Local).AddTicks(6222));
+                        .HasDefaultValue(new DateTime(2023, 7, 26, 1, 58, 13, 358, DateTimeKind.Local).AddTicks(8881));
 
                     b.Property<string>("Data")
                         .IsRequired()
@@ -343,6 +346,9 @@ namespace DataAccess.Migrations
                     b.Property<int?>("StickerId")
                         .HasColumnType("int");
 
+                    b.Property<double?>("TotalPrice")
+                        .HasColumnType("float");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -439,9 +445,6 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(80)
                         .HasColumnType("nvarchar(80)");
-
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -612,9 +615,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(40)");
 
                     b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -635,6 +636,10 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
+
+                    b.Property<string>("VerificationCode")
+                        .HasMaxLength(340)
+                        .HasColumnType("nvarchar(340)");
 
                     b.HasKey("Id");
 

@@ -35,6 +35,7 @@ namespace Application.UseCases.Queries.Searches
         public TownshipDto Township { get; set; }
          public  EmotionDto2  Emotions { get; set; }
         public IEnumerable<CommenttDto> Comments { get; set; } = new List<CommenttDto>();
+        public double? TotalPrice { get; set; }
         public DateTime? DeletedAt { get; set; }   
          public DateTime? CreatedAt { get; set; }   
          public DateTime? LastUpdatedAt { get; set; }   

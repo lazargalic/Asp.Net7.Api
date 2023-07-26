@@ -31,7 +31,7 @@ namespace Implementation.UseCases.Queries.Ef
                 Id=x.Id,
                 NameEmotion = x.NameEmotion,
                 ImagePath = x.ImagePath,
-                Price = x.Price
+               // Price = x.Price
             }).ToList();
 
             return res;

@@ -34,6 +34,7 @@ namespace Implementation.Validators
                        .MinimumLength(5).WithMessage("Email ne sme biti kraci od 5 karaktera.")
                        .MaximumLength(80).WithMessage("Email ne sme biti duzi od 80 karaktera.")
                        .EmailAddress().WithMessage("Email nije u dobrom formatu.")
+                       .Must(email => !context.Users.Any(x => x.Email == email && !x.IsActive)).WithMessage("Vaš nalog nije aktiviran. Proverite email za aktivaciju ili kontaktirajte administratore!")
                        .Must(email => !context.Users.Any(x => x.Email == email)).WithMessage("Ovaj email vec postoji u bazi podataka.");
 
             RuleFor(x => x.Password).NotEmpty().WithMessage("Sifra je obavezno polje.")

@@ -4,6 +4,7 @@ using Application.UseCases.Queries.Searches;
 using DataAccess;
 using Domain;
 using FluentValidation;
+using Implementation.Payments.Calculator;
 using Implementation.Validators;
 using System;
 using System.Collections.Generic;
@@ -17,13 +18,16 @@ namespace Implementation.UseCases.Commands.Ef
     {
         private AddPostValidator ValidatorPost { get; }
         private NonRegisteredUserValidator ValidatorNonRegUser { get; }
+        private CalculateTotalPrice Calculator { get; }
         public EfAddPostNonRegisteredUser(
-            Asp2023DbContext context, 
+            Asp2023DbContext context,
             AddPostValidator validator1,
-            NonRegisteredUserValidator validator2) : base(context)
+            NonRegisteredUserValidator validator2,
+            CalculateTotalPrice calculator) : base(context)
         {
             ValidatorPost = validator1;
             ValidatorNonRegUser = validator2;
+            Calculator = calculator;
         }
 
         public int Id => 19;
@@ -64,17 +68,13 @@ namespace Implementation.UseCases.Commands.Ef
                 End = articleToAddRequest.End,
                 MainPicturePath = articleToAddRequest.MainPicturePath != null ? articleToAddRequest.MainPicturePath : "/",
                 TownshipId = articleToAddRequest.TownshipId,
-                UserId=null,   // 
+                UserId = null,   // 
                 NonRegisteredUserId = lastInsertedNonRegUserId,
-                CategoryDesignArticleId=articleToAddRequest.CategoryDesignArticleId,
-                CategoryDimensionId= articleToAddRequest.CategoryDimensionId
-            };
+                CategoryDesignArticleId = articleToAddRequest.CategoryDesignArticleId,
+                CategoryDimensionId = articleToAddRequest.CategoryDimensionId,
+                TotalPrice = Calculator.CalculateArticleTotalPrice(articleToAddRequest)
+        };
 
-
-            //Context.Articles.Add(addArticle);
-            //Context.SaveChanges();
-
-            //int lastInsertedArticleId = addArticle.Id;
 
             var moreImages = new List<ArticleImage>();
 
@@ -84,24 +84,22 @@ namespace Implementation.UseCases.Commands.Ef
                 {
                     moreImages.Add(new ArticleImage
                     {
-                        //ArticleId = lastInsertedArticleId,
                         Article=addArticle,
                         ImagePath = a.ImagePath,
                     });
                 }
 
                 addArticle.ArticleImages = moreImages ;
-
-
             }
 
+             
+
+ 
             Context.Articles.Add(addArticle);
             Context.SaveChanges();
 
-
-
-
         }
+
 
 
     }
