@@ -13,7 +13,11 @@ namespace DataAccess
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=DESKTOP-MCLUKEP\\SQLEXPRESS;Initial Catalog=AspProjekat2023;Integrated Security=True;TrustServerCertificate=True");  //TrustServerCertificate=True
+            optionsBuilder.UseSqlServer("Data Source=DESKTOP-MCLUKEP\\SQLEXPRESS;Initial Catalog=AspProjekat2023;Integrated Security=True;TrustServerCertificate=True");
+
+
+ 
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Implementation.UseCases
@@ -31,18 +32,6 @@ namespace Implementation.UseCases
             HandleLoggingAndAuthorization(command, data);
             command.Execute(data);
 
-
-            bool isAuthorized = _user.Id == 0 ? false : true;
-            _auditLogger.Log( new Application.Logging.AuditLogDto
-            {
-                UseCaseName=command.Name,
-                UserIdentity=_user.Identity,
-                IsAuthorized= isAuthorized,
-                UserId= isAuthorized ? _user.Id : null,
-                CreatedTime=DateTime.Now,
-                Data= JsonSerializer.Serialize(data)
-            });
-
         }
 
         public TResponse HandleQuery<TRequest, TResponse>(IQuery<TRequest, TResponse> query, TRequest data)
@@ -50,18 +39,6 @@ namespace Implementation.UseCases
 
             HandleLoggingAndAuthorization(query, data);
             var response = query.Execute(data);
-
-
-            bool isAuthorized = _user.Id == 0 ? false : true;
-/*            _auditLogger.Log(new Application.Logging.AuditLogDto
-            {
-                UseCaseName = query.Name,
-                UserIdentity = _user.Identity,
-                IsAuthorized = isAuthorized,
-                UserId = isAuthorized ? _user.Id : null,
-                CreatedTime = DateTime.Now,
-                Data = JsonSerializer.Serialize(data)
-            });*/
 
             return response;
 
@@ -75,6 +52,17 @@ namespace Implementation.UseCases
             {
                 throw new ForbiddenExecutionException(useCase.Name, _user.Identity);
             }
+
+            _auditLogger.Log(new Application.Logging.AuditLogDto
+            {
+                UseCaseName = useCase.Name,
+                UserIdentity = _user.Identity,
+                IsAuthorized = isAuthorized,
+                UserId = isAuthorized ? _user.Id : null,
+                CreatedTime = DateTime.Now,
+                Data = JsonSerializer.Serialize(data)
+            });
+
         }
 
 

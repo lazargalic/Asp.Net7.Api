@@ -31,6 +31,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Application.Exceptions;
 using Implementation.Payments.Calculator;
+using Microsoft.AspNetCore.HttpOverrides;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +59,8 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
 
     });
+
+
 
     //Dokumentacija xml-a
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -89,6 +93,12 @@ builder.Services.AddSingleton(settings);
 
 
 ///////////////////////////////My Dependency Operations Start
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
+});
+
+
 builder.Services.AddTransient<IEmailSender>(x =>
                     new SmtpEmailSender(settings.EmailOptions.FromEmail,
                                         settings.EmailOptions.Password,
@@ -248,6 +258,16 @@ builder.Services.AddAuthentication(options =>
 
 ///
 var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())       ///daske
+{
+    app.UseHttpsRedirection();
+}
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
